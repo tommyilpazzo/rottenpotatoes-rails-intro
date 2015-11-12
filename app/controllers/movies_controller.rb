@@ -11,7 +11,13 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
+    @css_class = {:th_title => '', :th_release_date => ''}
+    if params["sort_by"].nil?
+      @movies = Movie.all
+    else
+      @movies = Movie.order(params["sort_by"]).all
+      @css_class[("th_" + params["sort_by"]).to_sym] = "hilite"
+    end
   end
 
   def new
