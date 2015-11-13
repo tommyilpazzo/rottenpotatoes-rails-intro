@@ -12,11 +12,12 @@ class MoviesController < ApplicationController
 
   def index
     @css_class = {:th_title => '', :th_release_date => ''}
-    if params["sort_by"].nil?
-      @movies = Movie.all
-    else
-      @movies = Movie.order(params["sort_by"]).all
-      @css_class[("th_" + params["sort_by"]).to_sym] = "hilite"
+    @all_ratings = Movie.all_ratings
+    @checked_ratings = params["ratings"].nil? ? @all_ratings : params["ratings"].keys
+    @movies = Movie.where("rating IN (?)", @checked_ratings)
+    unless params["sort_by"].nil?
+      @movies = @movies.order(params["sort_by"])
+      @css_class[("th_" + params["sort_by"]).to_sym] = "hilite"  
     end
   end
 
